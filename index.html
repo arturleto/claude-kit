@@ -129,6 +129,17 @@ pre .g{color:var(--green)}
 .os-card h3{font-size:16px;font-weight:600;margin-bottom:12px;color:var(--green)}
 .os-card pre{background:#0C0C14;font-size:13.5px;padding:16px 18px}
 
+/* промпт для агента */
+.prompt-box{position:relative}
+.prompt-box pre{padding-right:120px;white-space:pre-wrap;word-break:break-word}
+.copy-btn{
+  position:absolute;top:14px;right:14px;padding:9px 16px;border-radius:10px;
+  background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.4);color:var(--green);
+  font-family:Inter,sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .2s ease;
+}
+.copy-btn:hover{background:rgba(0,255,136,.2)}
+.copy-btn.done{background:rgba(0,255,136,.28);color:#0A2418}
+
 /* доступ */
 .access{
   background:linear-gradient(150deg,rgba(108,99,255,.14),rgba(0,212,255,.06));
@@ -321,6 +332,45 @@ pip3 install yt-dlp</pre>
 
 <section>
   <div class="wrap">
+    <div class="eyebrow">Ленивый способ</div>
+    <h2>Отдать установку агенту</h2>
+    <p class="section-lead">Можно не ставить руками. Скопируй текст ниже, подставь своё имя и папку, отправь в Claude Code или Codex. Установщик умеет работать без вопросов, поэтому агент дойдёт до конца сам.</p>
+
+    <div class="prompt-box">
+      <button class="copy-btn" id="copyBtn">Скопировать</button>
+<pre id="promptText">Поставь мне систему работы с проектами из репозитория
+https://github.com/arturleto/claude-code-starter-kit
+
+Действуй по шагам, ничего не пропускай:
+
+1. Проверь, что установлены git, jq, ffmpeg, python3, node.
+   Чего нет, поставь: macOS через brew, Linux через apt, Windows через winget.
+   На Windows все команды выполняй в Git Bash, не в PowerShell.
+
+2. Склонируй репозиторий в домашнюю папку, в папку claude-kit.
+   Репозиторий приватный. Если git попросит логин или выдаст 404,
+   остановись и скажи мне: значит доступ ещё не выдан.
+
+3. Запусти установку без вопросов:
+   cd ~/claude-kit &amp;&amp; bash install.sh --name "МОЁ ИМЯ" --root "ПУТЬ К РАБОЧЕЙ ПАПКЕ" --yes
+
+4. Прогони проверку и покажи мне вывод целиком:
+   bash ~/.claude/hooks/doctor.sh
+
+5. Прочитай docs/01-ПАМЯТЬ.md, docs/02-ПРОЕКТЫ.md и docs/03-КОМАНДА-SS.md
+   и объясни своими словами, как теперь устроена работа.
+
+6. Ничего не удаляй и не перезаписывай вручную: установщик сам делает бэкап.
+
+7. В конце скажи, что осталось сделать мне руками.</pre>
+    </div>
+
+    <p class="section-lead" style="margin-top:24px"><b style="color:var(--yellow)">Если у агента нет доступа в интернет</b> (частая настройка по умолчанию), склонируй репозиторий сам, а агенту дай задачу на локальную папку: «поставь систему из ~/claude-kit, инструкция в README.md».</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
     <div class="access">
       <h2>Доступ к репозиторию</h2>
       <p>Репозиторий приватный. Внутри только шаблоны и скрипты, ничего личного, но открыт он по приглашению.</p>
@@ -340,5 +390,27 @@ pip3 install yt-dlp</pre>
   </div>
 </footer>
 
+<script>
+(function(){
+  var btn = document.getElementById('copyBtn');
+  if (!btn) return;
+  btn.addEventListener('click', function(){
+    var text = document.getElementById('promptText').innerText;
+    var done = function(){
+      btn.textContent = 'Скопировано';
+      btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = 'Скопировать'; btn.classList.remove('done'); }, 2000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function(){});
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch(e) {}
+      document.body.removeChild(ta);
+    }
+  });
+})();
+</script>
 </body>
 </html>
