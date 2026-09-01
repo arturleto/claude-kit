@@ -123,6 +123,12 @@ pre .g{color:var(--green)}
 }
 .chip b{color:var(--yellow);font-weight:600}
 
+/* системы */
+.os{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.os-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 20px 6px}
+.os-card h3{font-size:16px;font-weight:600;margin-bottom:12px;color:var(--green)}
+.os-card pre{background:#0C0C14;font-size:13.5px;padding:16px 18px}
+
 /* доступ */
 .access{
   background:linear-gradient(150deg,rgba(108,99,255,.14),rgba(0,212,255,.06));
@@ -145,7 +151,7 @@ footer a{color:var(--tx2)}
 
 <div class="hero">
   <div class="wrap">
-    <span class="badge">Claude Code · Codex · macOS</span>
+    <span class="badge">Claude Code · Codex · Mac, Windows, Linux</span>
     <h1>Агент, который <span class="grad">помнит твои проекты</span></h1>
     <p class="lead">Готовая система работы с ИИ-агентом: память между сессиями, автоматические напоминания и один шаг в конце работы.</p>
     <p class="sub">Собрана из живой настройки, которая используется каждый день. Ставится одной командой.</p>
@@ -264,6 +270,7 @@ cd claude-kit &amp;&amp; bash install.sh
 
 <span class="c"># 3. проверить</span>
 ~/.claude/hooks/doctor.sh</pre>
+    <p class="section-lead" style="margin-top:20px">На Windows эти же три команды выполняются в <b>Git Bash</b>: правой кнопкой в папке, «Git Bash Here». В PowerShell и cmd они не сработают.</p>
     <p class="section-lead" style="margin-top:26px">Доктор покажет, на месте ли хуки, не сломались ли маршруты и всё ли есть в индексе памяти. Ноль ошибок значит система живая.</p>
     <div class="chips">
       <span class="chip"><b>/ss</b> сохранить и задеплоить</span>
@@ -285,8 +292,30 @@ cd claude-kit &amp;&amp; bash install.sh
     <div class="eyebrow">Требования</div>
     <h2>Что нужно на компьютере</h2>
     <p class="section-lead">Базовое ставится одной строкой. Остальное только под те скиллы, которыми будешь пользоваться, список есть в документации кита.</p>
-<pre>brew install jq ffmpeg yt-dlp git gh python3 node</pre>
-    <p class="section-lead" style="margin-top:22px"><b style="color:var(--yellow)">jq обязателен.</b> Без него хуки молча перестают работать, и система выглядит сломанной без единой ошибки на экране.</p>
+
+    <div class="os">
+      <div class="os-card">
+        <h3>macOS</h3>
+<pre>brew install jq ffmpeg yt-dlp \
+  git gh python3 node</pre>
+      </div>
+      <div class="os-card">
+        <h3>Windows</h3>
+<pre>winget install jqlang.jq \
+  Gyan.FFmpeg yt-dlp.yt-dlp \
+  Git.Git GitHub.cli \
+  Python.Python.3.12 OpenJS.NodeJS</pre>
+      </div>
+      <div class="os-card">
+        <h3>Linux</h3>
+<pre>sudo apt install jq ffmpeg git \
+  python3 python3-pip nodejs npm
+pip3 install yt-dlp</pre>
+      </div>
+    </div>
+
+    <p class="section-lead" style="margin-top:26px"><b style="color:var(--yellow)">jq обязателен на любой системе.</b> Без него хуки молча перестают работать, и всё выглядит сломанным без единой ошибки на экране.</p>
+    <p class="section-lead"><b style="color:var(--cyan)">На Windows нужен Git for Windows.</b> Хуки и скрипты кита это bash, Claude Code запускает их через Git Bash. Установщик тоже запускается в Git Bash, а не в PowerShell.</p>
   </div>
 </section>
 
